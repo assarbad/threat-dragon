@@ -1,0 +1,21 @@
+name: Publish releases to winget-pkgs
+on:
+  release:
+    types: [released]
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Get version
+        id: get-version
+        run: |
+          # Finding the version from release name
+          $VERSION="${{ github.event.release.name }}" -replace '^v '
+          "version=$VERSION" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      - uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: OWASP.ThreatDragon
+          version: ${{ steps.get-version.outputs.version }}
+          installers-regex: '[sS]etup-.+?\.exe$'
+          token: ${{ secrets.WINGET_TOKEN }}
