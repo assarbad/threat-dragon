@@ -162,8 +162,7 @@
         {
             "symbolic_name": "component5",
             "title": "Test title component5",
-            "description": "Test description component5",
-            "trust_zone": "trust-zone2"
+            "description": "Test description component5"
         }
     ],
 
@@ -480,20 +479,24 @@
             "symbolic_name": "threat0",
             "title": "Test title threat0",
             "description": "Test description threat0",
-            "components_affected": ["actor0", "component0", "component1", "component2"],
+            "components_affected": ["actor0", "component0", "component2", "data-store2"],
             "threat_persona": "threat-persona0",
             "event": "Test event threat0",
-            "sources": ["adversary"],
+            "sources": ["adversary", "failure"],
             "attack_mechanisms": [
                 {
-                    "capec_id": 100,
-                    "capec_title": "Overflow Buffers"
+                    "capec_id": 1,
+                    "capec_title": "Accessing Functionality Not Properly Constrained by acls"
                 }
             ],
             "weaknesses": [
                 {
-                    "cwe_id": 120,
-                    "cwe_title": "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+                    "cwe_id": 276,
+                    "cwe_title": "Incorrect Default Permissions"
+                },
+                {
+                    "cwe_id": 285,
+                    "cwe_title": "Improper Authorization"
                 }
             ]
         },
@@ -501,7 +504,7 @@
             "symbolic_name": "threat1",
             "title": "Test title threat1",
             "description": "Test description threat1",
-            "components_affected": ["component3"],
+            "components_affected": ["actor0", "actor3", "component3", "data-store3"],
             "threat_persona": "threat-persona1",
             "event": "Test event threat0",
             "sources": ["human_error"],
@@ -522,7 +525,7 @@
             "symbolic_name": "threat2",
             "title": "Test title threat2",
             "description": "Test description threat2",
-            "components_affected": ["component4"],
+            "components_affected": ["actor0", "actor4", "component4", "data-store4"],
             "threat_persona": "threat-persona2",
             "event": "Test event threat0",
             "sources": ["failure"]
@@ -534,7 +537,7 @@
             "components_affected": ["component5"],
             "threat_persona": "threat-persona3",
             "event": "Test event threat0",
-            "sources": ["events_beyond_org_control"]
+            "sources": ["events_beyond_org_control", "adversary"]
         },
         {
             "symbolic_name": "threat4",

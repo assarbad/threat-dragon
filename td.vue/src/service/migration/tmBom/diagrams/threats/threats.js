@@ -3,30 +3,14 @@ import controls from './controls';
 import personas from './personas';
 import risks from './risks';
 
-const applyThreats = (threats, components) => {
-    threats.forEach((threat) => {
-        if (threat.components_affected) {
-            threat.components_affected.forEach((affected) => {
-                components.forEach((component) => {
-	                if (affected === component.id) {
-	                    component.data.threats.push(threat);
-	                }
-                });
-            });
-        }
-    });
-    return components;
-};
-
-export const findThreats = (model) => {
+const merge = (model) => {
     let tdThreats = new Array();
 
     model.threats?.forEach((threat) => {
         let description = threat.description;
 
-        if (threat.event) {
-            description += '\nOn event : ' + threat.event;
-        }
+        // threat.event is a value required by the schema
+        description += '\nOn event : ' + threat.event;
 
         if (threat.attack_mechanisms) {
             let mechanisms = threat.attack_mechanisms;
@@ -44,13 +28,14 @@ export const findThreats = (model) => {
             });
         }
 
-        if (threat.sources) {
-            description += '\nExample attack vectors are from ' + threat.sources;
+        // sources is a required key
+        description += '\nExample attack vectors from :';
+        for (let source of threat.sources) {
+            description += '\n- ' + source.replaceAll('_', ' ');
         }
 
-        if (threat.threat_persona) {
-            description += '\n' + personas.merge(model, threat.symbolic_name);
-        }
+        // threat.threat_persona is a value required by the schema
+        description += '\n' + personas.merge(model, threat.threat_persona);
 
         tdThreats.push({
             status: 'Open',
@@ -60,20 +45,16 @@ export const findThreats = (model) => {
             type: 'Generic',
             mitigation: '',
             modelType: 'Generic',
-            id: threat.symbolic_name
+            id: threat.symbolic_name,
+            components_affected: threat.components_affected
         });
     });
 
-    return tdThreats;
-};
+    tdThreats = controls.merge(model, tdThreats);
+    tdThreats = assumptions.merge(model, tdThreats);
+    tdThreats = risks.merge(model, tdThreats);
 
-export const merge = (model, components) => {
-    let threats = findThreats(model);
-    threats = controls.merge(model, threats);
-    threats = assumptions.merge(model, threats);
-    threats = risks.merge(model, threats);
-    components = applyThreats(threats, components);
-    return components;
+    return tdThreats;
 };
 
 export default {
