@@ -30,7 +30,6 @@ const countNodes = (model, trust_zone) => {
             }
         });
     }
-    console.debug('trust_zone : ' + trust_zone + ' count: ' + count);
 
     return count;
 };
@@ -84,15 +83,11 @@ const merge = (model) => {
                 data: data
             });
 
-            console.debug('offset: ' + JSON.stringify(offset));
-            if (offset.row < (offset.row + dimensions.height + nodeGeometry.padding)) {
-                // expand next row to avoid overlap
-                offset.row += (dimensions.height + nodeGeometry.padding);
-                console.debug('offset now : ' + JSON.stringify(offset));
-            } 
+            // track next trust boundary box row
+            offset.row = Math.max(offset.row, (position.y + dimensions.height + nodeGeometry.padding));
 
             if (boxCount++ % 2) {
-                // ready for next trust boundary box in row
+                // ready for next trust boundary box in the row
                 position.x += (dimensions.width + nodeGeometry.padding);
             } else {
                 // start a new row

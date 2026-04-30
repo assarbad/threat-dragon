@@ -20,6 +20,7 @@ describe('service/migration/tmBom/diagrams/boxes.js', () => {
             expect(testBoundaryBoxes[0].id).toBe('trust-zone0');
             expect(testBoundaryBoxes[1].id).toBe('trust-zone1');
             expect(testBoundaryBoxes[2].id).toBe('trust-zone2');
+            expect(testBoundaryBoxes[3].id).toBe('trust-zone3');
         });
 
         it('sizes the boundary boxes', () => {
@@ -41,22 +42,18 @@ describe('service/migration/tmBom/diagrams/boxes.js', () => {
         it('names the boundary boxes', () => {
             expect(testBoundaryBoxes[0].data.name).toBe('Test title trust-zone0');
             expect(testBoundaryBoxes[0].attrs.label.text).toBe('Test title trust-zone0');
-            expect(testBoundaryBoxes[1].data.name).toBe('Test title trust-zone1');
-            expect(testBoundaryBoxes[1].attrs.label.text).toBe('Test title trust-zone1');
-            expect(testBoundaryBoxes[2].data.name).toBe('Test title trust-zone2');
-            expect(testBoundaryBoxes[2].attrs.label.text).toBe('Test title trust-zone2');
+            expect(testBoundaryBoxes[3].data.name).toBe('Test title trust-zone3');
+            expect(testBoundaryBoxes[3].attrs.label.text).toBe('Test title trust-zone3');
         });
 
         it('provides the description', () => {
             expect(testBoundaryBoxes[0].data.description).toContain('Test description trust-zone0');
-            expect(testBoundaryBoxes[1].data.description).toContain('Test description trust-zone1');
-            expect(testBoundaryBoxes[2].data.description).toContain('Test description trust-zone2');
+            expect(testBoundaryBoxes[3].data.description).toContain('Test description trust-zone3');
         });
 
         it('sets the Z index', () => {
             expect(testBoundaryBoxes[0].zIndex).toBe(-1);
-            expect(testBoundaryBoxes[1].zIndex).toBe(-2);
-            expect(testBoundaryBoxes[2].zIndex).toBe(-3);
+            expect(testBoundaryBoxes[3].zIndex).toBe(-4);
         });
 
     });
