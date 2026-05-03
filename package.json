@@ -1,6 +1,6 @@
 {
   "name": "threat-dragon",
-  "version": "2.6.1-RC2",
+  "version": "2.6.1",
   "appBundleId": "org.owasp.threatdragon",
   "private": true,
   "scripts": {
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@wdio/cli": "^9.27.0",
-    "baseline-browser-mapping": "^2.10.19",
+    "baseline-browser-mapping": "^2.10.20",
     "npm-run-all2": "^8.0.4",
     "rimraf": "^6.1.3"
   },
