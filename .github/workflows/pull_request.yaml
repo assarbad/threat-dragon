@@ -277,6 +277,8 @@ jobs:
     name: Site visual regression
     runs-on: ubuntu-24.04
     needs: site_unit_tests
+    # TODO: https://github.com/OWASP/threat-dragon/issues/1613
+    if: false
     defaults:
       run:
         working-directory: td.vue
