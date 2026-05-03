@@ -18,7 +18,6 @@ jest.mock('electron-devtools-installer', () => ({
     VUEJS_DEVTOOLS: 'VUEJS_DEVTOOLS'
 }));
 jest.mock('electron-updater', () => ({ autoUpdater: { checkForUpdatesAndNotify: jest.fn() } }));
-jest.mock('wdio-electron-service/main', () => ({}));
 
 function buildMockDeps () {
     appHandlers = {};
