@@ -23,10 +23,11 @@ For example if RC1, but change for RC2 and so on :
 10. ensure that the package-lock files are up to date using `npm install`
 11. `git add --all; git status`
 12. sign the commit: `git commit -S -m"release candidate 2.6.1-RC1"; git status`
-13. `git push`
-14. tag and sign the release `git tag -s v2.6.1-RC1`
-15. `git push origin v2.6.1-RC1`
-16. `git status`
+13. check for a good 'git' commit: `git verify-commit <sha from commit>`
+14. `git push`
+15. tag and sign the release `git tag -s v2.6.1-RC1`
+16. check for a good 'git' signature : `git verify-tag v2.6.1-RC1`
+17. `git push origin v2.6.1-RC1` && `git status`
 
 repeat as necessary for further release candidates.
 
@@ -43,7 +44,8 @@ Reset the build state to 'latest'; this is displayed on the demo site:
 3. ensure that the package-lock files are up to date using `npm install`
 4. `git add --all; git status`
 5. sign the commit: `git commit -S -m"set build version back to latest"`
-6. `git push`
+6. check for a good 'git' commit: `git verify-commit <sha from commit>`
+7. `git push`
 
 ## Create the release
 
@@ -64,9 +66,11 @@ After the releases candidate has been agreed by the Threat Dragon community, a r
 11. ensure all package-lock files are up to date using `npm install`
 12. `git add --all; git status`
 13. sign the commit: `git commit -S -m"release version 2.6.1"`
-14. `git push` and wait for commit pipeline actions to complete
-15. tag and sign the release `git tag -s v2.6.1`
-16. `git push origin v2.6.1`
+14. check for a good 'git' commit: `git verify-commit <sha from commit>`
+15. `git push` and wait for commit pipeline actions to complete
+16. tag and sign the release `git tag -s v2.6.1`
+17. check for a good 'git' signature : `git verify-tag v2.6.1`
+18. `git push origin v2.6.1` && `git status`
 
 The github release workflow automatically creates the draft release and the install images
 
@@ -287,7 +291,8 @@ Revert the build state back to 'latest'; this build state is displayed on the de
 2. ensure that the package-lock files are up to date using `npm install`
 3. `git add --all; git status`
 4. sign the commit: `git commit -S -m"set build version to latest"`
-5. `git push`
+5. check for a good 'git' commit: `git verify-commit <sha from commit>`
+6. `git push`
 
 [altool]: https://successfulsoftware.net/2023/04/28/moving-from-altool-to-notarytool-for-mac-notarization/
 [area]: https://github.com/OWASP/threat-dragon/releases
