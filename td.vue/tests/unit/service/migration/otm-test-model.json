@@ -180,12 +180,16 @@
       },
       "threats": [
         {
-          "threat": "22724267-be7e-44c0-8b1f-d7d33e9a34ec",
+          "threat": "test-threat1",
           "state": "exposed",
           "mitigations": [
             {
-              "mitigation": "fd6136f4-e2ff-11eb-ba80-0242ac130004",
+              "mitigation": "test-mitigation1",
               "state": "implemented"
+            },
+            {
+              "mitigation": "test-mitigation2",
+              "state": "open"
             }
           ]
         }
@@ -269,11 +273,11 @@
       "representations": null,
       "threats": [
         {
-          "threat": "22724267-be7e-44c0-8b1f-d7d33e9a34ec",
+          "threat": "test-threat1",
           "state": "exposed",
           "mitigations": [
             {
-              "mitigation": "fd6136f4-e2ff-11eb-ba80-0242ac130004",
+              "mitigation": "test-mitigation1",
               "state": "required"
             }
           ]
@@ -335,7 +339,7 @@
   "threats": [
     {
       "name": "Threat 1",
-      "id": "22724267-be7e-44c0-8b1f-d7d33e9a34ec",
+      "id": "test-threat1",
       "description": "Description for threat 1",
       "categories": [
         "Spoofing",
@@ -356,20 +360,43 @@
         "sql",
         "cwe-123"
       ]
+    },
+    {
+      "name": "Threat 2",
+      "id": "minimal-test-threat2",
+      "risk": {
+        "likelihood": 44,
+        "impact": 66
+      }
+    },
+    {
+      "name": "Threat 3",
+      "id": "high-test-threat3",
+      "risk": {
+        "likelihood": 100,
+        "impact": 70
+      }
+    },
+    {
+      "name": "Threat 4",
+      "id": "critical-test-threat4",
+      "risk": {
+        "likelihood": 90,
+        "impact": 100
+      }
     }
   ],
   "mitigations": [
     {
       "name": "This is the name of mitigation 1",
-      "id": "fd6136f4-e2ff-11eb-ba80-0242ac130004",
+      "id": "test-mitigation1",
       "description": "Description for mitigation 1",
       "riskReduction": 50,
       "attributes": null
     },
     {
       "name": "Mitigation 2",
-      "id": "3b837730-e300-11eb-ba80-0242ac130004",
-      "description": "Description for mitigation 2",
+      "id": "minimal-test-mitigation2",
       "riskReduction": 100,
       "attributes": null
     }

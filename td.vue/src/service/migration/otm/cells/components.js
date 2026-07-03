@@ -1,4 +1,5 @@
 import properties from './properties.js';
+import threats from './threats.js';
 
 export const list = (model, otmId) => {
     const cells = [];
@@ -18,6 +19,7 @@ export const merge = (model, component, representation) => {
     const cell = properties.cellProperties(component, representation);
     cell.id = component.id; // OTM required value
     cell.data.description = properties.combineDescription(model, component);
+    cell.data.threats = threats.merge(model, component);
 
     if (representation.size) { // otherwise size remains at default property
         cell.size = representation.size;

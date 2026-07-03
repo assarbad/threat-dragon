@@ -26,7 +26,7 @@ describe('service/migration/otm/cells/components.js', () => {
     describe('merging OTM', () => {
         let testCell;
 
-        describe('creates properties for cells', () => {
+        describe('creating properties for cells', () => {
             const component = {
                 name: 'Web Service',
                 id: 'web-service',
@@ -37,6 +37,13 @@ describe('service/migration/otm/cells/components.js', () => {
                 type: 'web-service',
                 tags: [
                     'tomcat'
+                ],
+                threats: [
+                    {
+                        threat: 'test-threat1',
+                        state: 'foo',
+                        mitigations: [{mitigation: 'test-mitigation1', state: 'bar'}]
+                    }
                 ]
             };
             const representation = {
@@ -71,6 +78,10 @@ describe('service/migration/otm/cells/components.js', () => {
 
             it('creates cell description', () => {
                 expect(testCell.data.description).toBe(component.description);
+            });
+
+            it('creates cell threats', () => {
+                expect(testCell.data.threats).toHaveLength(1);
             });
 
             it('creates cell size', () => {
