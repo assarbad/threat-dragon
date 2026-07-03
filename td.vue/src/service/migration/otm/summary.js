@@ -6,10 +6,9 @@ const merge = (model) => {
     if (model.project) {
         summary.id = model.project.id; // required OTM value
         summary.title = model.project.name; // required OTM value
+        summary.owner = '';
 
-        if (model.project.description) {
-            summary.description = model.project.description;
-        }
+        summary.description = model.project?.description ? model.project.description : '';
 
         if (model.project.owner) {
             summary.owner = model.project.owner;

@@ -33,11 +33,11 @@ describe('service/migration/otm/summary.js', () => {
             });
 
             it('stores the compatibility attributes', () => {
-			    expect(testSummary.compatibility.attributes).toStrictEqual(otmModel.project.attributes);
+                expect(testSummary.compatibility.attributes).toStrictEqual(otmModel.project.attributes);
             });
 
             it('stores the compatibility tags', () => {
-			    expect(testSummary.compatibility.tags).toStrictEqual(otmModel.project.tags);
+                expect(testSummary.compatibility.tags).toStrictEqual(otmModel.project.tags);
             });
         });
 
@@ -66,28 +66,28 @@ describe('service/migration/otm/summary.js', () => {
 
         describe('handling optional values', () => {
             let missingModel;
-	
+
             beforeEach(() => {
-			    missingModel = JSON.parse(JSON.stringify(otmModel));
+                missingModel = JSON.parse(JSON.stringify(otmModel));
             });
 
             it('handles absent description', () => {
                 delete missingModel.project.description;
                 testSummary = summary.merge(missingModel);
-			    expect(testSummary.description).toBeUndefined();
+                expect(testSummary.description).toHaveLength(0);
                 expect(testSummary.owner).toBeDefined();
             });
 
             it('handles absent owner', () => {
                 delete missingModel.project.owner;
                 testSummary = summary.merge(missingModel);
-			    expect(testSummary.owner).toBeUndefined();
+                expect(testSummary.owner).toHaveLength(0);
                 expect(testSummary.description).toBeDefined();
             });
 
             it('handles absent owner contact', () => {
-			    delete missingModel.project.ownerContact;
-			    testSummary = summary.merge(missingModel);
+                delete missingModel.project.ownerContact;
+                testSummary = summary.merge(missingModel);
                 expect(testSummary.compatibility.ownerContact).toBeUndefined();
                 expect(testSummary.compatibility).toBeDefined();
             });
@@ -96,9 +96,9 @@ describe('service/migration/otm/summary.js', () => {
                 delete missingModel.project.ownerContact;
                 delete missingModel.project.attributes;
                 delete missingModel.project.tags;
-			    testSummary = summary.merge(missingModel);
-			    expect(testSummary.compatibility).toBeDefined();
+                testSummary = summary.merge(missingModel);
+                expect(testSummary.compatibility).toBeDefined();
             });
-	    });
+        });
     });
 });
