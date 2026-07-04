@@ -87,7 +87,7 @@ export default {
 }
 
 .td-treatment-dropdown.active :deep(.td-dropdown-toggle) {
-    background-color: #5a6268;
-    border-color: #545b62;
+    background-color: darken($gray, 10%);
+    border-color: darken($gray, 12.5%);
 }
 </style>
