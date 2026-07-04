@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import models from './models/index.js';
+import { isOpen, isResolved } from './status.js';
 import { tc } from '../../i18n/index.js';
 import store from '@/store/index.js';
 
@@ -45,7 +46,7 @@ const valuesToTranslations = {
 
 const convertToTranslationString = (val) => valuesToTranslations[val];
 
-export const createNewTypedThreat = function (modelType, cellType,number) {
+export const createNewTypedThreat = function (modelType, cellType, number) {
     let title, type;
 
     if (!modelType) {
@@ -59,8 +60,8 @@ export const createNewTypedThreat = function (modelType, cellType,number) {
 
     const freqMap = store.get().state.cell?.ref?.data.threatFrequency;
     if (freqMap) {
-        let min = freqMap[Object.keys(freqMap)[0]],choice=Object.keys(freqMap)[0];
-        Object.keys(freqMap).forEach((k)=>{
+        let min = freqMap[Object.keys(freqMap)[0]], choice=Object.keys(freqMap)[0];
+        Object.keys(freqMap).forEach((k) => {
             if(freqMap[k]<min)
             {
                 min = freqMap[k];
@@ -132,7 +133,7 @@ export const createNewTypedThreat = function (modelType, cellType,number) {
 };
 
 const hasOpenThreats = (data) => !!data && !!data.threats &&
-    data.threats.filter(x => x.status.toLowerCase() === 'open').length > 0;
+    data.threats.filter(x => isOpen(x.status)).length > 0;
 
 const filter = (diagrams, filters) => {
     return diagrams
@@ -152,7 +153,7 @@ const filterForDiagram = (data, filters) => {
         return [];
     }
 
-    return data.threats.filter(x => filters.showMitigated || x.status.toLowerCase() !== 'mitigated');
+    return data.threats.filter(x => filters.showMitigated || !isResolved(x.status));
 };
 
 export default {

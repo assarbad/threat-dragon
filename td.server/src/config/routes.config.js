@@ -2,11 +2,12 @@ import express from 'express';
 
 import auth from '../controllers/auth.js';
 import bearer from './bearer.config.js';
-import configController from "../controllers/configcontroller";
+import configController from '../controllers/configcontroller';
 import decodeRepoPaths from './decodeRepoPaths.config.js';
 import googleProviderThreatmodelController from '../controllers/googleProviderThreatmodelController.js';
 import healthcheck from '../controllers/healthz.js';
 import homeController from '../controllers/homecontroller.js';
+import metadataController from '../controllers/metadataController.js';
 import templateController from '../controllers/templateController.js';
 import threatmodelController from '../controllers/threatmodelcontroller.js';
 
@@ -21,6 +22,8 @@ const unauthRoutes = (router) => {
     router.get('/', homeController.index);
 
     router.get('/healthz', healthcheck.healthz);
+    router.get('/security.txt', metadataController.legacySecurityTxtRedirect);
+    router.get('/.well-known/security.txt', metadataController.securityTxt);
     router.get('/api/config', configController.config);
     router.get('/api/threatmodel/organisation', threatmodelController.organisation);
     
@@ -40,7 +43,7 @@ const unauthRoutes = (router) => {
 const routes = (router) => {
     router.post('/api/logout', auth.logout);
     router.post('/api/token/refresh', auth.refresh);
-   // Template routes
+    // Template routes
     router.post('/api/templates/bootstrap', templateController.bootstrapTemplateRepository);// bootstrap template repo
     router.get('/api/templates/', templateController.listTemplates);// list all templates
     router.post('/api/templates/import', templateController.importTemplate);// import a new template
