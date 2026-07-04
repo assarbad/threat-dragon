@@ -112,6 +112,11 @@ EOF
     done
 }
 
+die() {
+    echo "$script_name: $*" >&2
+    exit 2
+}
+
 record_failure() {
     if [ -z "$failures" ]; then
         failures="$1"
@@ -322,7 +327,8 @@ checks_to_csv() {
 }
 
 need_docker() {
-    docker info >/dev/null 2>&1
+    command -v docker >/dev/null 2>&1 || die "required command not found: docker"
+    docker info >/dev/null 2>&1 || die "docker is not running or is not accessible"
 }
 
 install_dependencies() {
