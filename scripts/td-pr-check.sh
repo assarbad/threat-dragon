@@ -6,9 +6,9 @@ image_name="${TD_PR_IMAGE:-threat-dragon:pr-local}"
 lychee_image="${LYCHEE_IMAGE:-lycheeverse/lychee:0.23.0}"
 spellcheck_image="${SPELLCHECK_IMAGE:-jonasbn/github-action-spellcheck:0.60.0}"
 zap_image="${ZAP_IMAGE:-ghcr.io/zaproxy/zaproxy:stable}"
-e2e_config="${TD_E2E_CONFIG:-e2e.local.config.js}"
+e2e_config="${TD_E2E_CONFIG:-e2e.ci.config.js}"
 e2e_browser="${TD_E2E_BROWSER:-}"
-e2e_headless="${TD_E2E_HEADLESS:-}"
+e2e_headless="${TD_E2E_HEADLESS:-true}"
 e2e_app_port="${TD_E2E_APP_PORT:-${PORT:-8080}}"
 e2e_base_url="${TD_E2E_BASE_URL:-http://localhost:$e2e_app_port/}"
 server_api_port="${SERVER_API_PORT:-3000}"
@@ -71,12 +71,13 @@ Environment overrides:
       Default: $e2e_config
 
   TD_E2E_BROWSER
-      Optional Cypress browser, such as chrome or chromium.
-      Default: <Cypress default>
+      Optional Cypress browser, such as chrome or chromium. If unset, the
+      script auto-detects chrome or chromium and fails if neither is installed.
+      Default: auto-detect
 
   TD_E2E_HEADLESS
       Optional Cypress headless toggle: true or false.
-      Default: <Cypress default>
+      Default: $e2e_headless
 
   TD_E2E_APP_PORT
       Preferred local app port for e2e tests. The script will use the first
@@ -375,6 +376,28 @@ tryPort(start);
 ' "$1"
 }
 
+detect_e2e_browser() {
+    if [ -n "$e2e_browser" ]; then
+        echo "$e2e_browser"
+        return 0
+    fi
+
+    cypress_browsers="$(./node_modules/.bin/cypress info 2>/dev/null)" || return
+
+    if echo "$cypress_browsers" | grep -q "Name: chrome"; then
+        echo "chrome"
+        return 0
+    fi
+
+    if echo "$cypress_browsers" | grep -q "Name: chromium"; then
+        echo "chromium"
+        return 0
+    fi
+
+    echo "Chrome or Chromium is required for e2e_tests. Install Google Chrome or Chromium, or set TD_E2E_BROWSER to a Cypress-supported browser." >&2
+    return 1
+}
+
 desktop_e2e_build_args() {
     os_name="$(uname -s)"
     machine="$(uname -m)"
@@ -485,15 +508,14 @@ desktop_e2e_smokes() {
 e2e_tests() {
     install_dependencies && (
         cd td.vue || exit
+        detected_e2e_browser="$(detect_e2e_browser)" || exit
         resolved_app_port="$(resolve_available_port "$e2e_app_port")" || exit
         e2e_app_port="$resolved_app_port"
         if [ -z "${TD_E2E_BASE_URL:-}" ]; then
             e2e_base_url="http://localhost:$e2e_app_port/"
         fi
         cypress_args=(run -C "$e2e_config" --config "baseUrl=$e2e_base_url")
-        if [ -n "$e2e_browser" ]; then
-            cypress_args+=(--browser "$e2e_browser")
-        fi
+        cypress_args+=(--browser "$detected_e2e_browser")
         case "$e2e_headless" in
             true)
                 cypress_args+=(--headless)
@@ -508,7 +530,7 @@ e2e_tests() {
                 exit 1
                 ;;
         esac
-        SERVER_API_PORT="$server_api_port" PORT="$e2e_app_port" npm run start:serve &&
+        SERVER_API_PORT="$server_api_port" APP_PORT="$e2e_app_port" npm run start:serve &&
             ./node_modules/.bin/cypress "${cypress_args[@]}"
     )
     status="$?"
