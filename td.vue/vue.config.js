@@ -35,7 +35,7 @@ const proxyConfig = {
     },
 };
 
-// Configure dev server to use HTTPS with env.port if TLS credentials are available, otherwise use HTTP with port 8080
+// Configure dev server to use HTTPS with TLS credentials when available.
 const devServerConfig = hasTlsCredentials
     ? {
         https: {
@@ -48,7 +48,7 @@ const devServerConfig = hasTlsCredentials
     }
     : {
         // note that client webSocketURL config has been removed, as it was incompatible with desktop version
-        port: 8080,
+        port: PORT,
         proxy: proxyConfig,
         allowedHosts: [appHostname],
     };

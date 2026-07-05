@@ -11,7 +11,7 @@ e2e_browser="${TD_E2E_BROWSER:-}"
 e2e_headless="${TD_E2E_HEADLESS:-true}"
 e2e_app_port="${TD_E2E_APP_PORT:-${PORT:-8080}}"
 e2e_base_url="${TD_E2E_BASE_URL:-http://localhost:$e2e_app_port/}"
-server_api_port="${SERVER_API_PORT:-3000}"
+server_api_port="${TD_E2E_API_PORT:-${SERVER_API_PORT:-3000}}"
 zap_app_port="${TD_ZAP_APP_PORT:-${APP_PORT:-8080}}"
 zap_target_url="${TD_ZAP_TARGET_URL:-http://host.docker.internal:$zap_app_port}"
 all_checks="markdown_lint link_check spell_check server_unit_tests site_unit_tests desktop_unit_tests desktop_e2e_smokes e2e_tests zap_scan docker_build trivy_scan"
@@ -90,6 +90,11 @@ Environment overrides:
 
   SERVER_API_PORT
       API port used by the local Vue app proxy for e2e and ZAP checks.
+      Default: $server_api_port
+
+  TD_E2E_API_PORT
+      Preferred local mock API port for e2e tests. The script will use the
+      first available port at or above this value.
       Default: $server_api_port
 
   TD_ZAP_APP_PORT
@@ -348,6 +353,7 @@ resolve_available_port() {
     node -e '
 const net = require("net");
 const start = Number(process.argv[1]);
+const reserved = new Set(process.argv.slice(2).map(Number).filter(Number.isInteger));
 
 if (!Number.isInteger(start) || start < 1 || start > 65535) {
   console.error("Port must be an integer from 1 to 65535");
@@ -358,6 +364,11 @@ const tryPort = (port) => {
   if (port > 65535) {
     console.error("No available port found");
     process.exit(2);
+  }
+
+  if (reserved.has(port)) {
+    tryPort(port + 1);
+    return;
   }
 
   const socket = net.createConnection({ host: "127.0.0.1", port });
@@ -509,7 +520,9 @@ e2e_tests() {
     install_dependencies && (
         cd td.vue || exit
         detected_e2e_browser="$(detect_e2e_browser)" || exit
-        resolved_app_port="$(resolve_available_port "$e2e_app_port")" || exit
+        resolved_api_port="$(resolve_available_port "$server_api_port")" || exit
+        server_api_port="$resolved_api_port"
+        resolved_app_port="$(resolve_available_port "$e2e_app_port" "$server_api_port")" || exit
         e2e_app_port="$resolved_app_port"
         if [ -z "${TD_E2E_BASE_URL:-}" ]; then
             e2e_base_url="http://localhost:$e2e_app_port/"
@@ -531,7 +544,7 @@ e2e_tests() {
                 ;;
         esac
         SERVER_API_PORT="$server_api_port" APP_PORT="$e2e_app_port" npm run start:serve &&
-            ./node_modules/.bin/cypress "${cypress_args[@]}"
+            SERVER_API_PORT="$server_api_port" APP_PORT="$e2e_app_port" ./node_modules/.bin/cypress "${cypress_args[@]}"
     )
     status="$?"
 
