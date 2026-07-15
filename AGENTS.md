@@ -152,6 +152,7 @@ The following quality gates are required when changes are made in `td.server`:
 - Desktop specific code should be electron-specific code, or for a feature that only exists for desktop.
   - For most features, prefer updating the Vue app.
 - Never make breaking changes that would require a semver major version bump of Threat Dragon
+- When adding a new translation, add the new key and the default (English) value to all translation files.
 
 ### `td.server/`
 
