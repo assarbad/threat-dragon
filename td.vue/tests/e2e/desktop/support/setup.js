@@ -238,6 +238,7 @@ exports.mochaHooks = {
                 connectionRetryTimeout: 10000,
                 capabilities: {
                     browserName: 'chrome',
+                    'wdio:enforceWebDriverClassic': true,
                     'goog:chromeOptions': {
                         debuggerAddress: `127.0.0.1:${debugPort}`,
                         windowTypes: ['page', 'webview']
